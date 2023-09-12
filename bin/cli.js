@@ -2,6 +2,7 @@
 
 const process = require("process");
 const { execSync } = require("child_process");
+const { existSync } = require("fs");
 const readline = require("readline").createInterface({
   input: process.stdin,
   output: process.stdout
@@ -76,7 +77,10 @@ const convertToANSI = (codeNumber) => {
 
 const copySource = (source, destination) => {
   const pathToNpmIgnore = path.resolve(__dirname, "../.npmignore");
-  return `rsync -rv --progress ${source}/* ${destination} --exclude-from='${pathToNpmIgnore}'`;
+  const excluding = existSync(pathToNpmIgnore) ? 
+    `--exclude-from='${pathToNpmIgnore}'` : 
+    "";
+  return `rsync -rv --progress ${source}/* ${destination} ` + excluding;
 }
 
 run();
