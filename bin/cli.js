@@ -2,7 +2,7 @@
 
 const process = require("process");
 const { execSync } = require("child_process");
-const { existSync: existsSync } = require("fs");
+const { existsSync } = require("fs");
 const readline = require("readline").createInterface({
   input: process.stdin,
   output: process.stdout
