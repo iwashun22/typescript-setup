@@ -16,7 +16,7 @@
   \******************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _module_console_message__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./module/console-message */ \"./module/console-message.ts\");\n\nvar text = \"Hello world\";\nvar lists = [\"Apple\", \"Orange\", \"\"];\n(0,_module_console_message__WEBPACK_IMPORTED_MODULE_0__.consoleText)(text);\n\n\n//# sourceURL=webpack://typesript-setup/./index.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _module_console_message__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./module/console-message */ \"./module/console-message.ts\");\n\nvar text = \"Hello world\";\nvar lists = [\"Apple\", \"Orange\", \"\"];\n(0,_module_console_message__WEBPACK_IMPORTED_MODULE_0__.consoleText)(text);\n(0,_module_console_message__WEBPACK_IMPORTED_MODULE_0__.consoleItems)(lists);\n\n\n//# sourceURL=webpack://typesript-setup/./index.ts?");
 
 /***/ }),
 

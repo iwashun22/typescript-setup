@@ -40,7 +40,7 @@ function build() {
   const workDirectory = path.resolve(process.cwd(), projectName);
 
   const folderToCopy = path.resolve(__dirname, "../build");
-  const copyCommand = `rsync -av --progress ${folderToCopy} ${workDirectory} --exclude yarn.lock`
+  const copyCommand = `rsync -av --progress ${folderToCopy}/* ${workDirectory}`
   runCommand(copyCommand);
 
   runCommand(`echo "Setting complete! Install packages by <yarn install> or <npm install>"`);
