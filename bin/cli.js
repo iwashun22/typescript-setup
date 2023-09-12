@@ -57,10 +57,10 @@ function build(obj) {
     runCommand(copyDocker);
   }
 
-  consoleSuccess();
+  consoleSuccess(projectName);
 }
 
-function consoleSuccess() {
+function consoleSuccess(projectName) {
   // ANSI escape code
   const clr = {
     o: convertToANSI(0), // original
