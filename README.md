@@ -4,3 +4,7 @@
 ```sh
 npx typescript-setup
 ```
+
+
+https://github.com/iwashun22/typescript-setup/assets/85538338/1263b7c3-652a-4605-ac57-2f3fde5da194
+

@@ -1,6 +1,7 @@
 {
   "name": "typescript-setup",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "license": "MIT",
-  "bin": "./bin/cli.js"
+  "bin": "./bin/cli.js",
+  "keywords": ["typescript", "docker", "setup", "start", "build"]
 }
