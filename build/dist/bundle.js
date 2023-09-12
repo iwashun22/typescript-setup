@@ -26,7 +26,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _mod
   \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   consoleItems: () => (/* binding */ consoleItems),\n/* harmony export */   consoleText: () => (/* binding */ consoleText)\n/* harmony export */ });\nvar consoleText = function (str) {\n    console.log(str);\n};\nvar consoleItems = function (arr) {\n    for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {\n        var _a = arr_1[_i], index = _a[0], value = _a[1];\n        console.log(\"\".concat(index, \": \").concat(value));\n    }\n};\n\n\n\n//# sourceURL=webpack://typesript-setup/./module/console-message.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   consoleItems: () => (/* binding */ consoleItems),\n/* harmony export */   consoleText: () => (/* binding */ consoleText)\n/* harmony export */ });\nvar consoleText = function (str) {\n    console.log(str);\n};\nvar consoleItems = function (arr) {\n    arr.forEach(function (value, index) {\n        console.log(\"\".concat(index, \": \").concat(value));\n    });\n};\n\n\n\n//# sourceURL=webpack://typesript-setup/./module/console-message.ts?");
 
 /***/ })
 
