@@ -6,9 +6,9 @@ const consoleText: consoleMessage<String> = (str) => {
 }
 
 const consoleItems: consoleMessage<Array<any>> = (arr) => {
-  for(const [index, value] of arr) {
+  arr.forEach((value, index) => {
     console.log(`${index}: ${value}`);
-  }
+  })
 }
 
 export {
