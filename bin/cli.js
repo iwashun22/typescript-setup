@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const process = require("process");
 const { execSync } = require("child_process");
 const readline = require("readline").createInterface({
   input: process.stdin,
@@ -22,9 +23,27 @@ if(!projectName) {
   console.log("Please provide a project name");
   readline.question(": ", name => {
     projectName = name;
+    build();
     readline.close()
   });
+} else {
+  build();
 }
 
-const makeDir = `mkdir ${projectName}`;
-runCommand(makeDir);
+
+function build() {
+  const makeDir = `mkdir ${projectName}`;
+  runCommand(makeDir);
+  
+  // console.log(__dirname)
+  // console.log(process.cwd())
+  const workDirectory = path.resolve(process.cwd(), projectName);
+
+  const folderToCopy = path.resolve(__dirname, "../build");
+  const copyCommand = `rsync -av --progress ${folderToCopy} ${workDirectory} --exclude yarn.lock`
+  runCommand(copyCommand);
+
+  runCommand(`echo "Setting complete! Install packages by <yarn install> or <npm install>"`);
+  
+  process.chdir(workDirectory);
+}
