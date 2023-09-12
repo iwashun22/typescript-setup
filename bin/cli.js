@@ -75,7 +75,8 @@ const convertToANSI = (codeNumber) => {
 }
 
 const copySource = (source, destination) => {
-  return `rsync -rv --progress ${source}/* ${destination} --exclude-from='.npmignore'`;
+  const pathToNpmIgnore = path.resolve(__dirname, "../.npmignore");
+  return `rsync -rv --progress ${source}/* ${destination} --exclude-from='${pathToNpmIgnore}'`;
 }
 
 run();
