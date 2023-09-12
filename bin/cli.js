@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 
 const { execSync } = require("child_process");
+const readline = require("readline").createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 const path = require("path");
 
-const projectName = process.argv[2];
+let projectName = process.argv[2];
 
 function runCommand(command) {
   try {
@@ -15,8 +19,11 @@ function runCommand(command) {
 }
 
 if(!projectName) {
-  console.error("Please provide a project name");
-  process.exit(1);
+  console.log("Please provide a project name");
+  readline.question(": ", name => {
+    projectName = name;
+    readline.close()
+  });
 }
 
 const makeDir = `mkdir ${projectName}`;
