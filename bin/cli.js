@@ -8,8 +8,6 @@ const readline = require("readline").createInterface({
 });
 const path = require("path");
 
-let projectName = process.argv[2];
-
 function runCommand(command) {
   try {
     execSync(command, { stdio: "inherit" });
@@ -19,19 +17,28 @@ function runCommand(command) {
   }
 }
 
-if(!projectName) {
-  console.log("Please provide a project name");
-  readline.question(": ", name => {
-    projectName = name;
-    build();
-    readline.close()
-  });
-} else {
-  build();
+const run = () => {
+  return new Promise((resolve, reject) => {
+    readline.question("Please provide a project name\n: ", name => {
+      resolve(name);
+    });
+  })
+  .then(projectName => {
+    readline.question("Do you want to set up Dockerfile and docker-compose.yml? (y) ", answer => {
+      console.log(projectName, answer);
+      const chooseTo = answer.match(/^y(es)?$/i) ? true : false;
+      build({ projectName, chooseTo })
+      readline.close();
+    });
+  })
 }
 
-
-function build() {
+/**
+ * 
+ * @param {{ projectName, chooseTo }} obj 
+ */
+function build(obj) {
+  const { projectName, chooseTo } = obj;
   const makeDir = `mkdir ${projectName}`;
   runCommand(makeDir);
   
@@ -40,10 +47,35 @@ function build() {
   const workDirectory = path.resolve(process.cwd(), projectName);
 
   const folderToCopy = path.resolve(__dirname, "../build");
-  const copyCommand = `rsync -av --progress ${folderToCopy}/* ${workDirectory}`
+  const copyCommand = copySource(folderToCopy, workDirectory);
   runCommand(copyCommand);
 
-  runCommand(`echo "Setting complete! Install packages by <yarn install> or <npm install>"`);
-  
-  process.chdir(workDirectory);
+  if(chooseTo) {
+    const dockerDirectory = path.resolve(__dirname, "../build-docker");
+    const copyDocker = copySource(dockerDirectory, workDirectory);
+    runCommand(copyDocker);
+  }
+
+  consoleSuccess();
 }
+
+function consoleSuccess() {
+  // ANSI escape code
+  const clr = {
+    o: convertToANSI(0), // original
+    y: convertToANSI(33), // yellow
+    c: convertToANSI(36), // cyan
+    m: convertToANSI(35) // magenta
+  }
+  console.log(`${clr.y} Setting complete! ${clr.o} Install packages by${clr.c} <yarn install>${clr.o} or${clr.c} <npm install>${clr.o} after changing the directory to${clr.m} ${projectName}`);
+}
+
+const convertToANSI = (codeNumber) => {
+  return `\x1b[${codeNumber}m`;
+}
+
+const copySource = (source, destination) => {
+  return `rsync -rv --progress ${source}/* ${destination} --exclude-from='.npmignore'`;
+}
+
+run();
