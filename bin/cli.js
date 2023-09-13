@@ -27,6 +27,10 @@ function runCommand(command) {
 const run = () => {
   return new Promise((resolve, reject) => {
     readline.question("Please provide a project name\n: ", name => {
+      const hasSpace = name.match(/\s/g) ? true : false;
+      if(hasSpace) {
+        reject("Please remove the spaces for a project name");
+      }
       resolve(name);
     });
   })
@@ -37,6 +41,10 @@ const run = () => {
       build({ projectName, chooseTo })
       readline.close();
     });
+  })
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
   })
 }
 
