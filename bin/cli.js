@@ -3,11 +3,17 @@
 const process = require("process");
 const { execSync } = require("child_process");
 const { existsSync } = require("fs");
+const path = require("path");
+
 const readline = require("readline").createInterface({
   input: process.stdin,
   output: process.stdout
 });
-const path = require("path");
+readline.on("SIGINT", () => { process.emit("SIGINT"); });
+process.on("SIGINT", () => {
+  console.log("Canceled setup...")
+  process.exit();
+})
 
 function runCommand(command) {
   try {
@@ -64,11 +70,11 @@ function consoleSuccess(projectName) {
   // ANSI escape code
   const clr = {
     o: convertToANSI(0), // original
-    y: convertToANSI(33), // yellow
+    g: convertToANSI(32), // green
     c: convertToANSI(36), // cyan
     m: convertToANSI(35) // magenta
   }
-  console.log(`${clr.y} Setting complete! ${clr.o} Install packages by${clr.c} <yarn install>${clr.o} or${clr.c} <npm install>${clr.o} after changing the directory to${clr.m} ${projectName}`);
+  console.log(`\n:::: ${clr.g} Setting complete! ${clr.o} Install packages by${clr.c} <yarn install>${clr.o} or${clr.c} <npm install>${clr.o} after changing the directory to${clr.m} ${projectName}`);
 }
 
 const convertToANSI = (codeNumber) => {
@@ -80,7 +86,7 @@ const copySource = (source, destination) => {
   const excluding = existsSync(pathToNpmIgnore) ? 
     `--exclude-from='${pathToNpmIgnore}'` : 
     "";
-  return `rsync -rv --progress ${source}/* ${destination} ` + excluding;
+  return `rsync -rv --progress ${source}/ ${destination} ` + excluding;
 }
 
 run();
