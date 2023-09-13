@@ -7,12 +7,12 @@ npx typescript-setup
 
 <!-- https://github.com/iwashun22/typescript-setup/assets/85538338/1263b7c3-652a-4605-ac57-2f3fde5da194 -->
 
-<img src="./images/setup-cli-preview.png"/>
+<img src="https://iwashun22.github.io/typescript-setup/images/setup-cli-preview.png"/>
 
 ### With docker setup
 
-<img src="./images/with-docker-setup.png"/>
+<img src="https://iwashun22.github.io/typescript-setup/images/with-docker-setup.png"/>
 
 ### Without docker setup
 
-<img src="./images/without-docker.png"/>
+<img src="https://iwashun22.github.io/typescript-setup/images/without-docker.png"/>
