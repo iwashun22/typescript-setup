@@ -62,16 +62,16 @@ function build(obj) {
   
   // console.log(__dirname)
   // console.log(process.cwd())
-  const workDirectory = path.resolve(process.cwd(), projectName);
+  const workDir = path.resolve(process.cwd(), projectName);
 
   const folderToCopy = path.resolve(__dirname, "../build");
-  const copyCommand = copySource(folderToCopy, workDirectory);
+  const copyCommand = copySource(folderToCopy, workDir);
   runCommand(copyCommand);
-  runCommand(`cd ${workDirectory} && echo "node_modules" > .gitignore`);
+  runCommand(`cd ${workDir} && echo "node_modules" > .gitignore`);
 
   if(chooseTo) {
     const dockerDirectory = path.resolve(__dirname, "../build-docker");
-    const copyDocker = copySource(dockerDirectory, workDirectory);
+    const copyDocker = copySource(dockerDirectory, workDir);
     runCommand(copyDocker);
   }
 
@@ -84,7 +84,9 @@ function consoleError(message, err = null) {
 }
 
 function consoleSuccess(projectName) {
-  console.log(`\n:::: ${clr.g} Setting complete! ${clr.o} Install packages by${clr.c} <yarn install>${clr.o} or${clr.c} <npm install>${clr.o} after changing the directory to${clr.m} ${projectName}`);
+  const message = `\n:::: ${clr.g} Setting complete! ${clr.o} Install packages by${clr.c} <yarn install>${clr.o} or${clr.c} <npm install>`;
+  if(projectName === ".") console.log(message);
+  else console.log(message + `${clr.o} after changing the directory to${clr.g} ${projectName}`);
 }
 
 // ANSI escape code
