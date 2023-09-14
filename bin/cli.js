@@ -19,31 +19,32 @@ function runCommand(command) {
   try {
     execSync(command, { stdio: "inherit" });
   } catch (e) {
-    console.error(`Failed to execute ${command}`, e);
+    consoleError(`failed to execute ${command}`, e);
     process.exit(1);
   }
 }
 
 const run = () => {
   return new Promise((resolve, reject) => {
-    readline.question("Please provide a project name\n: ", name => {
+    readline.question("Please provide a project name (type . for current directory): ", name => {
+      if(!name) reject("Please provide a project name.");
+
       const hasSpace = name.match(/\s/g) ? true : false;
-      if(hasSpace) {
-        reject("Please remove the spaces for a project name");
-      }
+      if(hasSpace) reject("Please remove the spaces for a project name");
+
       resolve(name);
     });
   })
   .then(projectName => {
     readline.question("Do you want to set up Dockerfile and docker-compose.yml? (y) ", answer => {
-      console.log(projectName, answer);
+      // console.log(projectName, answer);
       const chooseTo = answer.match(/^y(es)?$/i) ? true : false;
       build({ projectName, chooseTo })
       readline.close();
     });
   })
   .catch(err => {
-    console.error(err);
+    consoleError(err);
     process.exit(1);
   })
 }
@@ -54,8 +55,10 @@ const run = () => {
  */
 function build(obj) {
   const { projectName, chooseTo } = obj;
-  const makeDir = `mkdir ${projectName}`;
-  runCommand(makeDir);
+  if(projectName !== ".") {
+    const makeDir = `mkdir ${projectName}`;
+    runCommand(makeDir);
+  }
   
   // console.log(__dirname)
   // console.log(process.cwd())
@@ -64,6 +67,7 @@ function build(obj) {
   const folderToCopy = path.resolve(__dirname, "../build");
   const copyCommand = copySource(folderToCopy, workDirectory);
   runCommand(copyCommand);
+  runCommand(`cd ${workDirectory} && echo "node_modules" > .gitignore`);
 
   if(chooseTo) {
     const dockerDirectory = path.resolve(__dirname, "../build-docker");
@@ -74,19 +78,26 @@ function build(obj) {
   consoleSuccess(projectName);
 }
 
+function consoleError(message, err = null) {
+  const str = `${clr.r}Error:${clr.y} ${message}${clr.m}`;
+  err ? console.error(str, err) : console.error(str);
+}
+
 function consoleSuccess(projectName) {
-  // ANSI escape code
-  const clr = {
-    o: convertToANSI(0), // original
-    g: convertToANSI(32), // green
-    c: convertToANSI(36), // cyan
-    m: convertToANSI(35) // magenta
-  }
   console.log(`\n:::: ${clr.g} Setting complete! ${clr.o} Install packages by${clr.c} <yarn install>${clr.o} or${clr.c} <npm install>${clr.o} after changing the directory to${clr.m} ${projectName}`);
 }
 
+// ANSI escape code
 const convertToANSI = (codeNumber) => {
   return `\x1b[${codeNumber}m`;
+}
+const clr = {
+  o: convertToANSI(0), // original
+  g: convertToANSI(32), // green
+  c: convertToANSI(36), // cyan
+  m: convertToANSI(35), // magenta
+  y: convertToANSI(33), // yellow
+  r: convertToANSI(31) // red
 }
 
 const copySource = (source, destination) => {
