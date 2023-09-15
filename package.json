@@ -1,7 +1,20 @@
 {
   "name": "typescript-setup",
-  "version": "1.6.5",
+  "version": "1.7.0",
   "license": "MIT",
   "bin": "./bin/cli.js",
-  "keywords": ["typescript", "tsc", "docker", "setup", "start", "build", "easy", "instant", "init"]
+  "keywords": [
+    "typescript",
+    "tsc",
+    "docker",
+    "setup",
+    "start",
+    "build",
+    "easy",
+    "instant",
+    "init"
+  ],
+  "devDendencies": {
+    "@types/node": "^20.6.1"
+  }
 }

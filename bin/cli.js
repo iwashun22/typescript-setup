@@ -2,8 +2,8 @@
 
 const process = require("process");
 const { execSync } = require("child_process");
-const { existsSync } = require("fs");
-const path = require("path");
+const fs = require("fs");
+const path = require("node:path");
 
 const readline = require("readline").createInterface({
   input: process.stdin,
@@ -11,7 +11,7 @@ const readline = require("readline").createInterface({
 });
 readline.on("SIGINT", () => { process.emit("SIGINT"); });
 process.on("SIGINT", () => {
-  console.log("Canceled setup...")
+  console.log("\nCanceled setup...");
   process.exit();
 })
 
@@ -38,9 +38,9 @@ const run = () => {
   .then(projectName => {
     readline.question("Do you want to set up Dockerfile and docker-compose.yml? (y) ", answer => {
       // console.log(projectName, answer);
-      const chooseTo = answer.match(/^y(es)?$/i) ? true : false;
-      build({ projectName, chooseTo })
-      readline.close();
+      const chooseTo = Boolean(answer.match(/^y(es)?$/i));
+      build({ projectName, chooseTo });
+      readline.pause();
     });
   })
   .catch(err => {
@@ -55,32 +55,50 @@ const run = () => {
  */
 function build(obj) {
   const { projectName, chooseTo } = obj;
-  if(projectName !== ".") {
-    const makeDir = `mkdir ${projectName}`;
-    runCommand(makeDir);
-  }
-  
-  // console.log(__dirname)
-  // console.log(process.cwd())
   const workDir = path.resolve(process.cwd(), projectName);
-
   const folderToCopy = path.resolve(__dirname, "../build");
-  const copyCommand = copySource(folderToCopy, workDir);
-  runCommand(copyCommand);
-  runCommand(`cd ${workDir} && echo "node_modules" > .gitignore`);
 
-  if(chooseTo) {
-    const dockerDirectory = path.resolve(__dirname, "../build-docker");
-    const copyDocker = copySource(dockerDirectory, workDir);
-    runCommand(copyDocker);
+  const copy = () => copyProject(projectName, folderToCopy, workDir, chooseTo);
+  
+  !fs.existsSync(workDir) ? 
+    copy() :
+    (() => {  
+      const files = fs.readdirSync(workDir) || [];
+      if(files.length !== 0) {
+        const dirName = workDir.split(path.sep).pop();
+        consoleError(`there are already files in directory \"${dirName}\"`);
+        readline.question("Do you still want to setup project? There might be a change or overwrite in your files. (y): ", answer => {
+          answer.match(/^y(es)?$/i) ? 
+            copy() : null;
+          readline.close();
+        })
+      } 
+      else {
+        copy();
+      }
+    })();
+
+  return;
+}
+
+function copyProject(projectName, source, destination, includeDocker) {
+  try {
+    fs.cpSync(source, destination, { recursive: true });
+    runCommand(`cd ${destination} && echo "node_modules" > .gitignore`);
+
+    if(includeDocker) {
+      const dockerSource = path.resolve(__dirname, "../build-docker");
+      fs.cpSync(dockerSource, destination, { recursive: true, force: true });
+    }
+    consoleSuccess(projectName);
+  } catch(err) {
+    consoleError("failed to copy", err);
   }
-
-  consoleSuccess(projectName);
 }
 
 function consoleError(message, err = null) {
   const str = `${clr.r}Error:${clr.y} ${message}${clr.m}`;
-  err ? console.error(str, err) : console.error(str);
+  err ? console.error(str, err, clr.o) : console.error(str, clr.o);
 }
 
 function consoleSuccess(projectName) {
@@ -100,14 +118,6 @@ const clr = {
   m: convertToANSI(35), // magenta
   y: convertToANSI(33), // yellow
   r: convertToANSI(31) // red
-}
-
-const copySource = (source, destination) => {
-  // const pathToNpmIgnore = path.resolve(__dirname, "../.npmignore");
-  // const excluding = existsSync(pathToNpmIgnore) ? 
-  //   `--exclude-from='${pathToNpmIgnore}'` : 
-  //   "";
-  return `cp -v -rf ${source}/ ${destination}`;
 }
 
 run();
