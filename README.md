@@ -11,7 +11,7 @@ npx typescript-setup
 
 ### With docker setup
 
-<img src="https://iwashun22.github.io/typescript-setup/images/with-docker-setup.png"/>
+<img src="https://iwashun22.github.io/typescript-setup/images/with-docker.png"/>
 
 ### Without docker setup
 
