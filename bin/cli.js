@@ -42,8 +42,8 @@ const run = () => {
       build({ projectName, chooseTo });
     });
   })
-  .catch(err => {
-    consoleError(err);
+  .catch(rejectDetail => {
+    consoleError(rejectDetail);
     process.exit(1);
   })
 }
@@ -66,7 +66,7 @@ function build(obj) {
       const files = fs.readdirSync(workDir) || [];
       if(files.length !== 0) {
         const dirName = workDir.split(path.sep).pop();
-        consoleError(`there are already files in directory \"${dirName}\"`);
+        consoleWarning(`there are already files in directory \"${dirName}\"`);
         readline.question("Do you still want to setup project? There might be a change or overwrite in your files. (y): ", answer => {
           answer.match(/^y(es)?$/i) ? 
             copy() : null;
@@ -100,7 +100,10 @@ function consoleError(message, err = null) {
   const str = `${clr.r}Error:${clr.y} ${message}${clr.m}`;
   err ? console.error(str, err, clr.o) : console.error(str, clr.o);
 }
-
+function consoleWarning(message, warn = null) {
+  const str = `${clr.m}Warning:${clr.y} ${message}`;
+  warn ? console.warn(str, warn, clr.o) : console.warn(str, clr.o);
+}
 function consoleSuccess(projectName) {
   const message = `\n:::: ${clr.g} Setting complete! ${clr.o} Install packages by${clr.c} <yarn install>${clr.o} or${clr.c} <npm install>`;
   if(projectName === ".") console.log(message);
