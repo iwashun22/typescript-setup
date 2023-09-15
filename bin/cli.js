@@ -103,11 +103,11 @@ const clr = {
 }
 
 const copySource = (source, destination) => {
-  const pathToNpmIgnore = path.resolve(__dirname, "../.npmignore");
-  const excluding = existsSync(pathToNpmIgnore) ? 
-    `--exclude-from='${pathToNpmIgnore}'` : 
-    "";
-  return `rsync -rv --progress ${source}/ ${destination} ` + excluding;
+  // const pathToNpmIgnore = path.resolve(__dirname, "../.npmignore");
+  // const excluding = existsSync(pathToNpmIgnore) ? 
+  //   `--exclude-from='${pathToNpmIgnore}'` : 
+  //   "";
+  return `cp -v -rf ${source}/ ${destination}`;
 }
 
 run();
