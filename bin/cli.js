@@ -40,7 +40,6 @@ const run = () => {
       // console.log(projectName, answer);
       const chooseTo = Boolean(answer.match(/^y(es)?$/i));
       build({ projectName, chooseTo });
-      readline.pause();
     });
   })
   .catch(err => {
@@ -60,6 +59,7 @@ function build(obj) {
 
   const copy = () => copyProject(projectName, folderToCopy, workDir, chooseTo);
   
+  readline.pause();
   !fs.existsSync(workDir) ? 
     copy() :
     (() => {  
