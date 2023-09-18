@@ -1,6 +1,6 @@
 {
   "name": "typescript-setup",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "license": "MIT",
   "bin": "./bin/cli.js",
   "keywords": [
@@ -14,7 +14,7 @@
     "instant",
     "init"
   ],
-  "devDendencies": {
-    "@types/node": "^20.6.1"
+  "devDependencies": {
+    "@types/node": "^20.6.2"
   }
 }

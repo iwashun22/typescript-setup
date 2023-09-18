@@ -9,8 +9,8 @@ RUN apt-get update \
 
 ENV LANG=en_US.UTF-8
 
-# set your local timezone
+# set a custom timezone
 # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-ENV TZ=Asia/Bangkok
+ENV TZ=Etc/UTC
 
 WORKDIR /app

@@ -89,6 +89,8 @@ function copyProject(projectName, source, destination, includeDocker) {
     if(includeDocker) {
       const dockerSource = path.resolve(__dirname, "../build-docker");
       fs.cpSync(dockerSource, destination, { recursive: true, force: true });
+
+      changeDockerTimeZoneToLocale(destination);
     }
     consoleSuccess(projectName);
   } catch(err) {
@@ -121,6 +123,23 @@ const clr = {
   m: convertToANSI(35), // magenta
   y: convertToANSI(33), // yellow
   r: convertToANSI(31) // red
+}
+
+function changeDockerTimeZoneToLocale(workDir) {
+  const dockerPath = path.resolve(workDir, "Dockerfile");
+  const file = fs.readFileSync(dockerPath, { encoding: "utf-8" });
+  const lines = file.split("\n");
+
+  const changedLine = lines.map(line => {
+    const env = line.match(/ENV(\s+)?TZ=/) ? true : false;
+    if(!env) return line;
+    line = line.split("=");
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    line[1] = timezone;
+    return line.join("=");
+  })
+  const toOneString = changedLine.join("\n");
+  fs.writeFileSync(dockerPath, toOneString);
 }
 
 run();
